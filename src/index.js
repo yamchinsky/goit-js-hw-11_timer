@@ -18,19 +18,16 @@ class CountdownTimer {
     if (this.timerId) {
       return;
     }
-
-    let time = Date.now(this.targetDate);
+    this.calculation();
 
     this.timerId = setInterval(() => {
-      time -= 1000;
-      const days = Math.floor(time / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      );
-      const mins = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-      const secs = Math.floor((time % (1000 * 60)) / 1000);
-      this.prinOut(days, hours, mins, secs);
+      this.calculation();
     }, 1000);
+  }
+
+  stopTimer() {
+    clearInterval(this.timerId);
+    this.timerId = undefined;
   }
 
   prinOut(days, hours, mins, secs) {
@@ -40,15 +37,20 @@ class CountdownTimer {
     this.timer.querySelector('[data-value="secs"]').textContent = secs;
   }
 
-  stopTimer() {
-    clearInterval(this.timerId);
-    this.timerId = undefined;
+  calculation() {
+    let time = Date.parse(this.targetDate) - Date.parse(new Date());
+
+    const days = Math.floor(time / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((time % (1000 * 60)) / 1000);
+    this.prinOut(days, hours, mins, secs);
   }
 }
 
 const timer = new CountdownTimer({
   selector: '#timer-1',
-  targetDate: new Date('Jul 17, 2019'),
+  targetDate: new Date('May 20, 2021'),
   refs: refs,
 });
 
